@@ -1,18 +1,39 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addTodo } from '../Actions/action';
-
+import axios from 'axios';
+import { addTodo, errorTodo } from '../Actions/action';
+import store from '../store';
+import { getData } from '../store';
 
 const AddTodo = () => {
     const dispatch =  useDispatch();
-    const select =  useSelector((state) => state.todo)
+    // const select =  useSelector((state) => state.todo)
 
     const [todo, setTodo] = useState({title: "", description: ""})
 
     const submitHandler = (e) => {
         e.preventDefault()
-        todo['id'] = select[select.length -1].id + 1;
-        dispatch(addTodo(todo))
+        // todo['id'] = select[select.length -1].id + 1;
+        axios.post('http://localhost:5000/todo', todo)
+          .then(res => res.data)
+          .then(todoData => {
+            console.log("todoData: ", todoData.data)
+            // return todoData.data
+            console.log(todoData.data === 'Successfully saved')
+            if (todoData.data === 'Successfully saved') {
+                return () => {
+                    console.log("abc")
+                    return getData().then(
+                        data => {
+                            console.log("data: ", data)
+                            return store.dispatch(addTodo(data))
+                        },
+                        error => store.dispatch(errorTodo(error))
+                    )
+                }
+            }
+          })
+        // dispatch(addTodo(todo))
     }
 
   return (

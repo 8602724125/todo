@@ -24,3 +24,10 @@ export const deleteTodo = (id) => {
         payload: id
     }
 }
+
+export const errorTodo = (error) => {
+    return {
+        type: "ERROR_TODO",
+        payload: error
+    }
+}

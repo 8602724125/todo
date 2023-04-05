@@ -1,6 +1,12 @@
 import rootReducer from "./Reducers/index";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from 'redux-thunk';
+import axios from "axios";
 
-const store =  createStore(rootReducer,  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const store =  createStore(rootReducer, applyMiddleware(thunk));
+
+export const getData = async () => {
+    return await axios.get('http://localhost:5000/todo');
+}
 
 export default store;
